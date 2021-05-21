@@ -20,7 +20,7 @@ func calculatePi(iterations int) float64 {
     }
     return result
 }
-
+/*
 // Purchases a 'product' equal to database id.
 func purchaseProduct(product int) string{
     id := product
@@ -36,7 +36,7 @@ func purchaseProduct(product int) string{
     }
     return row
 }
-
+*/
 func handlerPicalc(w http.ResponseWriter, r *http.Request) {
     log.Print("Pi calculator received a request.")
     iterations, err := strconv.Atoi(r.URL.Query()["iterations"][0])
@@ -46,7 +46,7 @@ func handlerPicalc(w http.ResponseWriter, r *http.Request) {
     }
     fmt.Fprintf(w, "%.10f\n", calculatePi(iterations))
 }
-
+/*
 func handlerPurchase(w http.ResponseWriter, r *http.Request) {
     log.Print("Purchase function received a request.")
     product, err := strconv.Atoi(r.URL.Query()["product"][0])
@@ -56,12 +56,12 @@ func handlerPurchase(w http.ResponseWriter, r *http.Request) {
     }
     fmt.Fprint(w, "%s", purchaseProduct(product))
 }
-
+*/
 func main() {
     log.Print("Pi calculator started.")
 
     http.HandleFunc("/picalc", handlerPicalc)
-    http.HandleFunc("/purchase", handlerPurchase)
+    //http.HandleFunc("/purchase", handlerPurchase)
 
     port := os.Getenv("PORT")
     if port == "" {
