@@ -69,7 +69,7 @@ func handlerPurchase(w http.ResponseWriter, r *http.Request) {
         fmt.Fprintf(w, "product parameter not valid\n")
         return
     }
-    fmt.Fprint(w, "%s\n", purchaseProduct(product))
+    fmt.Fprintf(w, "%s\n", purchaseProduct(product))
 }
 
 func main() {
