@@ -1,11 +1,14 @@
 package main
 
 import (
+    "database/sql"
     "fmt"
     "log"
     "net/http"
     "os"
     "strconv"
+
+    _ "github.com/lib/pq"
 )
 
 // Calculate pi using Gregory-Leibniz series:   (4/1) - (4/3) + (4/5) - (4/7) + (4/9) - (4/11) + (4/13) - (4/15) ...
@@ -20,23 +23,27 @@ func calculatePi(iterations int) float64 {
     }
     return result
 }
-/*
+
 // Purchases a 'product' equal to database id.
-func purchaseProduct(product int) string{
-    id := product
-    sqlStatement := 'SELECT col FROM products WHERE id=$1'
-    row := db.QueryRow(sqlStatement, id)
-    err := row.Scan(&col)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            fmt.Println("Zero rows found")
-        } else {
-            panic(err)
-        }
-    }
-    return row
+func purchaseProduct(product int) string {
+  psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+    "password=%s dbname=%s sslmode=disable",
+    host, port, user, password, dbname)
+  db, err := sql.Open("postgres", psqlInfo)
+  if err != nil {
+    panic(err)
+  }
+  defer db.Close()
+
+  err = db.Ping()
+  if err != nil {
+    panic(err)
+  }
+
+  message := fmt.Sprintf("Successfully connected!")
+  return message
 }
-*/
+
 func handlerPicalc(w http.ResponseWriter, r *http.Request) {
     log.Print("Pi calculator received a request.")
     iterations, err := strconv.Atoi(r.URL.Query()["iterations"][0])
@@ -46,7 +53,7 @@ func handlerPicalc(w http.ResponseWriter, r *http.Request) {
     }
     fmt.Fprintf(w, "%.10f\n", calculatePi(iterations))
 }
-/*
+
 func handlerPurchase(w http.ResponseWriter, r *http.Request) {
     log.Print("Purchase function received a request.")
     product, err := strconv.Atoi(r.URL.Query()["product"][0])
@@ -54,14 +61,14 @@ func handlerPurchase(w http.ResponseWriter, r *http.Request) {
         fmt.Fprintf(w, "product parameter not valid\n")
         return
     }
-    fmt.Fprint(w, "%s", purchaseProduct(product))
+    fmt.Fprint(w, "%s\n", purchaseProduct(product))
 }
-*/
+
 func main() {
     log.Print("Pi calculator started.")
 
-    http.HandleFunc("/picalc", handlerPicalc)
-    //http.HandleFunc("/purchase", handlerPurchase)
+//    http.HandleFunc("/picalc", handlerPicalc)
+    http.HandleFunc("/purchase", handlerPurchase)
 
     port := os.Getenv("PORT")
     if port == "" {
