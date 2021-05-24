@@ -10,6 +10,9 @@ COPY picalc.go picalc_test.go .
 # Run unit tests
 RUN CGO_ENABLED=0 GOOS=linux go test
 
+# Install lib/pq
+RUN CGO_ENABLED=0 GOOS=linux go get -u github.com/lib/pq
+
 # Build the code inside the container.
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o picalc
 
