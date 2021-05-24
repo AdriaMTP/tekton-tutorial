@@ -1,3 +1,9 @@
+# Uses kaniko image with some dependencies based on your project
+FROM gcr.io/kaniko-project/executor:latest
+
+# Install lib/pq
+RUN CGO_ENABLED=0 GOOS=linux go get -u github.com/lib/pq
+
 # Use the official Golang image to create a build artifact.
 # This is based on Debian and sets the GOPATH to /go.
 # https://hub.docker.com/_/golang
@@ -9,9 +15,6 @@ COPY picalc.go picalc_test.go .
 
 # Run unit tests
 RUN CGO_ENABLED=0 GOOS=linux go test
-
-# Install lib/pq
-RUN CGO_ENABLED=0 GOOS=linux go get -u github.com/lib/pq
 
 # Build the code inside the container.
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o picalc
