@@ -2,7 +2,7 @@
 FROM gcr.io/kaniko-project/executor:latest
 
 # Install lib/pq
-RUN CGO_ENABLED=0 GOOS=linux go get -u github.com/lib/pq
+RUN go get -u github.com/lib/pq
 
 # Use the official Golang image to create a build artifact.
 # This is based on Debian and sets the GOPATH to /go.
