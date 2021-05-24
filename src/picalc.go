@@ -11,6 +11,14 @@ import (
     _ "github.com/lib/pq"
 )
 
+const (
+    host     = "localhost"
+    port     = 31986
+    user     = "postgresadmin"
+    password = "admin123"
+    dbname   = "postgresdb"
+)
+
 // Calculate pi using Gregory-Leibniz series:   (4/1) - (4/3) + (4/5) - (4/7) + (4/9) - (4/11) + (4/13) - (4/15) ...
 func calculatePi(iterations int) float64 {
     var result float64 = 0.0
@@ -67,7 +75,7 @@ func handlerPurchase(w http.ResponseWriter, r *http.Request) {
 func main() {
     log.Print("Pi calculator started.")
 
-//    http.HandleFunc("/picalc", handlerPicalc)
+    http.HandleFunc("/picalc", handlerPicalc)
     http.HandleFunc("/purchase", handlerPurchase)
 
     port := os.Getenv("PORT")
