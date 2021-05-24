@@ -48,7 +48,7 @@ func purchaseProduct(product int) string {
     panic(err)
   }
 
-  message := fmt.Sprintf("Successfully connected!")
+  message := fmt.printf("Successfully connected!")
   return message
 }
 
@@ -69,14 +69,17 @@ func handlerPurchase(w http.ResponseWriter, r *http.Request) {
         fmt.Fprintf(w, "product parameter not valid\n")
         return
     }
-    fmt.Fprintf(w, "%s\n", purchaseProduct(product))
+    fmt.Fprintf(w, "%s", purchaseProduct(product))
 }
 
 func main() {
-    log.Print("Pi calculator started.")
+    log.Print("App started.")
 
     http.HandleFunc("/picalc", handlerPicalc)
+    log.Print("Pi calculator is listening on '/picalc'.")
+
     http.HandleFunc("/purchase", handlerPurchase)
+    log.Print("Product purchaser is listening on '/purchase'.")
 
     port := os.Getenv("PORT")
     if port == "" {
