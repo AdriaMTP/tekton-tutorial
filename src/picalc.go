@@ -48,7 +48,7 @@ func purchaseProduct(product int) string {
     panic(err)
   }
 
-  return fmt.Print("Successfully connected!")
+  return "Successfully connected!"
 }
 
 func handlerPicalc(w http.ResponseWriter, r *http.Request) {
