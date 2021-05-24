@@ -48,8 +48,7 @@ func purchaseProduct(product int) string {
     panic(err)
   }
 
-  message := fmt.printf("Successfully connected!")
-  return message
+  return fmt.Print("Successfully connected!")
 }
 
 func handlerPicalc(w http.ResponseWriter, r *http.Request) {
@@ -69,7 +68,7 @@ func handlerPurchase(w http.ResponseWriter, r *http.Request) {
         fmt.Fprintf(w, "product parameter not valid\n")
         return
     }
-    fmt.Fprintf(w, "%s", purchaseProduct(product))
+    fmt.Fprintf(w, "%s\n", purchaseProduct(product))
 }
 
 func main() {
