@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: check-transaction-purchase-pipeline
+spec:
+  workspaces:
+    - name: postgres
+      description: Workspace for postgres steps. 
+  params:
+    - name: hostaddr
+      description: PostgreSQL hostname or IP.
+      default: "localhost"
+    - name: port
+      description: PostgreSQL access port.
+      default: "5432"
+    - name: dbname
+      description: PostgreSQL products DB name.
+    - name: user
+      description: PostgreSQL access user.
+    - name: password
+      description: PostgreSQL access password.
+  tasks:
+    - name: check-transaction-purchase
+    - name: query-product-stock

@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: check-transaction-purchase
+spec:
+  workspaces:
+    - name: postgres
+      description: Workspace for postgres steps.
+  params:
+    - name: hostaddr
+      description: PostgreSQL hostname or IP.
+      default: "localhost"
+    - name: port
+      description: PostgreSQL access port.
+      default: "5432"
+    - name: dbname
+      description: PostgreSQL products DB name.
+    - name: user
+      description: PostgreSQL access user.
+    - name: password
+      description: PostgreSQL access password.
+  steps:
+    - name: check-transaction-message
+      image: alpine
+      // TO-DO: Check event HTTP data to see if it's a good transaction or a bad one.

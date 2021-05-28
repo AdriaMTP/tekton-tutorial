@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: query-product-stock-task-run-
+spec:
+  taskRef:
+    name: query-product-stock
+  workspaces:
+   - name: postgres
+     emptyDir: {}
+  params:
+    - name: hostaddr
+      value: "10.32.0.1"
+    - name: port
+      value: "31986"
+    - name: dbname
+      value: "postgresdb"
+    - name: user
+      value: "postgresadmin"
+    - name: password
+      value: "admin123"

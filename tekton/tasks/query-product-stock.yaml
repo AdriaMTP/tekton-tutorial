@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: query-product-stock
+spec:
+  workspaces:
+    - name: postgres
+      description: Workspace for postgres steps.
+  params:
+    - name: hostaddr
+      description: PostgreSQL hostname or IP.
+      default: "localhost"
+    - name: port
+      description: PostgreSQL access port.
+      default: "5432"
+    - name: dbname
+      description: PostgreSQL products DB name.
+    - name: user
+      description: PostgreSQL access user.
+    - name: password
+      description: PostgreSQL access password.
+  steps:
+    - name: query-stock-amount
+      image: postgres:12-alpine
+      script: |
+        #!/bin/bash
+        psql "hostaddr=$(params.hostaddr) port=$(params.port) dbname=$(params.dbname) user=$(params.user) password=$(params.password)" > $(workspaces.postgres.path)/products.table << EOF
+        SELECT * FROM products;
+        EOF
+        cat $(workspaces.postgres.path)/products.table
+        amount=$(cat $(workspaces.postgres.path)/products.table | grep "^  1" | grep -Eo "|[^|]*$" | grep -Eo "[^ ]*")
+        if (( amount < 5 )); then
+          echo "Stock is low on 'TO-DO: insert products.name'. Redirecting this event to the re-stock pipeline..."
+          // Manually increase stock in 5.
+        fi
