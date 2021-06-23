@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: backup-restore-postgres-pr-
+spec:
+  pipelineRef:
+    name: postgres-backup-restore-pipeline
+  workspaces:
+    - name: postgres
+      persistentVolumeClaim:
+        claimName: backup-restore-pvc
+  params:
+    - name: podname
+      value: "postgres-f97d5746b-dgxdx"
+    - name: dbname
+      value: "postgresdb"
+    - name: user
+      value: "postgresadmin"

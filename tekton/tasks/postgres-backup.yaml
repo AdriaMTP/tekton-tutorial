@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: postgres-backup
+spec:
+  workspaces:
+    - name: output
+      description: Workspace for postgres steps.
+  params:
+    - name: podname
+      description: PostgreSQL pod name to backup.
+    - name: dbname
+      description: PostgreSQL database to backup.
+      default: "postgresdb"
+    - name: user
+      description: PostgreSQL access user.
+      default: "postgresadmin"
+  steps:
+    - name: run-backup
+      image: bitnami/kubectl
+      script: |
+        #!/bin/bash
+        kubectl exec $(params.podname) -- bash -c "pg_dump -U $(params.user) $(params.dbname) > database.sql"
+        echo "Successfully generated 'backup.sql' file."

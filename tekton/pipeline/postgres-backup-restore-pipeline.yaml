@@ -1,0 +1,42 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: postgres-backup-restore-pipeline
+spec:
+  workspaces:
+    - name: postgres
+      description: Workspace for postgres steps.
+  params:
+    - name: podname
+      description: PostgreSQL pod name to backup.
+    - name: dbname
+      description: PostgreSQL products DB name.
+    - name: user
+      description: PostgreSQL access user.
+  tasks:
+    - name: postgres-backup
+      taskRef:
+        name: postgres-backup
+      workspaces:
+        - name: output
+          workspace: postgres
+      params:
+        - name: podname
+          value: "$(params.podname)"
+        - name: user
+          value: "$(params.user)"
+        - name: dbname
+          value: "$(params.dbname)"
+    - name: postgres-restore
+      taskRef:
+        name: postgres-restore
+      workspaces:
+        - name: backup
+          workspace: postgres
+      params:
+        - name: podname
+          value: "$(params.podname)"
+        - name: user
+          value: "$(params.user)"
+        - name: dbname
+          value: "$(params.dbname)"

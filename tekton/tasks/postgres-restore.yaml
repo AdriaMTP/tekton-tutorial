@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: postgres-restore
+spec:
+  workspaces:
+    - name: backup
+      description: Workspace for postgres steps.
+  params:
+    - name: podname
+      description: PostgreSQL pod name to backup.
+    - name: dbname
+      description: PostgreSQL database to backup.
+      default: "postgresdb"
+    - name: user
+      description: PostgreSQL access user.
+      default: "postgresadmin"
+    - name: backupfile
+      description: Backup file to be restored.
+      default: "database.sql"
+  steps:
+    - name: run-restore
+      image: bitnami/kubectl
+      script: |
+        #!/bin/bash
+        kubectl exec $(params.podname) -- bash -c "psql -U $(params.user) -d $(params.dbname) -f $(params.backupfile)"
+        echo "Successfully run restore command."
