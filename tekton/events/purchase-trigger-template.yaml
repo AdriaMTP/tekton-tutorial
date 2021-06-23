@@ -1,0 +1,47 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: purchase-trigger-template
+spec:
+  params:
+    - name: HOSTADDR
+      description: PostgreSQL hostname or IP.
+    - name: PORT
+      description: PostgreSQL access port.
+    - name: DBNAME
+      description: PostgreSQL products DB name.
+    - name: USER
+      description: PostgreSQL access user.
+    - name: PASSWORD
+      description: PostgreSQL access password.
+    - name: ID
+      description: HTTP-Request product ID to be stock-checked.
+    - name: PURCHASED
+      description: HTTP-Request transaction validation.
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: purchase-pr-
+    spec:
+      pipelineRef:
+        name: check-transaction-purchase-pipeline
+      workspaces:
+        - name: postgres
+          persistentVolumeClaim:
+            claimName: purchase-source-pvc
+      params:
+        - name: hostaddr
+          value: $(tt.params.HOSTADDR)
+        - name: port
+          value: $(tt.params.PORT)
+        - name: dbname
+          value: $(tt.params.DBNAME)
+        - name: user
+          value: $(tt.params.USER)
+        - name: password
+          value: $(tt.params.PASSWORD)
+        - name: id
+          value: $(tt.params.ID)
+        - name: purchased
+          value: $(tt.params.PURCHASED)

@@ -7,19 +7,16 @@ spec:
     - name: postgres
       description: Workspace for postgres steps.
   params:
-    - name: hostaddr
-      description: PostgreSQL hostname or IP.
-      default: "localhost"
-    - name: port
-      description: PostgreSQL access port.
-      default: "5432"
-    - name: dbname
-      description: PostgreSQL products DB name.
-    - name: user
-      description: PostgreSQL access user.
-    - name: password
-      description: PostgreSQL access password.
+    - name: purchased
+      description: HTTP-Request transaction validation.
   steps:
     - name: check-transaction-message
       image: alpine
-      // TO-DO: Check event HTTP data to see if it's a good transaction or a bad one.
+      script: |
+        if (( $(params.purchased) )); then
+          echo "Purchase transaction was successful."
+          # TO-DO: Send a thanking mail to client.
+        else
+          echo "Purchase transaction was NOT successful. Reporting to Sales Dpt."
+          # TO-DO: Report a Slack/Teams/eMail message to 'Sales Dpt.'
+        fi

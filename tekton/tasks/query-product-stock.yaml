@@ -19,6 +19,8 @@ spec:
       description: PostgreSQL access user.
     - name: password
       description: PostgreSQL access password.
+    - name: id
+      description: PostgreSQL product ID to be stock-checked.
   steps:
     - name: query-stock-amount
       image: postgres:12-alpine
@@ -28,8 +30,8 @@ spec:
         SELECT * FROM products;
         EOF
         cat $(workspaces.postgres.path)/products.table
-        amount=$(cat $(workspaces.postgres.path)/products.table | grep "^  1" | grep -Eo "|[^|]*$" | grep -Eo "[^ ]*")
+        amount=$(cat $(workspaces.postgres.path)/products.table | grep "^  $(params.id)" | grep -Eo "|[^|]*$" | grep -Eo "[^ ]*")
         if (( amount < 5 )); then
-          echo "Stock is low on 'TO-DO: insert products.name'. Redirecting this event to the re-stock pipeline..."
-          // Manually increase stock in 5.
+          echo "*Stock seems to be low for the purchased product. Redirecting this event to the re-stock pipeline..."
+          # (((Since we are not implementing a re-stock pipeline, you can increase stock manually...)))
         fi

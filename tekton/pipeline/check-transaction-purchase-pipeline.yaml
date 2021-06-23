@@ -9,16 +9,51 @@ spec:
   params:
     - name: hostaddr
       description: PostgreSQL hostname or IP.
-      default: "localhost"
     - name: port
       description: PostgreSQL access port.
-      default: "5432"
     - name: dbname
       description: PostgreSQL products DB name.
     - name: user
       description: PostgreSQL access user.
     - name: password
       description: PostgreSQL access password.
+    - name: id
+      description: HTTP-Request product ID to be stock-checked.
+    - name: purchased
+      description: HTTP-Request transaction validation.
   tasks:
     - name: check-transaction-purchase
+      taskRef:
+        name: check-transaction-purchase
+      workspaces:
+        - name: postgres
+          workspace: postgres
+      params:
+        - name: purchased
+          value: "$(params.purchased)"
     - name: query-product-stock
+      # TO-DO: run "query-product-stock" ONLY when $(params.purchased) == 'true'.
+      taskRef:
+        name: query-product-stock
+      runAfter:
+        - check-transaction-purchase
+      when:
+        - input: "$(params.purchased)"
+          operator: in
+          values: ["true"]
+      workspaces:
+        - name: postgres
+          workspace: postgres
+      params:
+        - name: hostaddr
+          value: "$(params.hostaddr)"
+        - name: port
+          value: "$(params.port)"
+        - name: dbname
+          value: "$(params.dbname)"
+        - name: user
+          value: "$(params.user)"
+        - name: password
+          value: "$(params.password)"
+        - name: id
+          value: "$(params.id)"

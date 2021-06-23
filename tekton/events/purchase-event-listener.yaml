@@ -1,0 +1,20 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: purchase-event-listener
+spec:
+  serviceAccountName: trigger-account
+  triggers:
+    - name: purchase-listener
+      interceptors:
+        - cel:
+            overlays:
+            - key: product_id
+              expression: body.product_id
+            - key: purchased
+              expression: body.purchased
+      bindings:
+        - ref: purchase-trigger-binding
+          kind: TriggerBinding
+      template:
+        ref: purchase-trigger-template

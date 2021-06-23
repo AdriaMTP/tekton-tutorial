@@ -1,0 +1,20 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: purchase-trigger-binding
+spec:
+  params:
+    - name: HOSTADDR
+      value: "10.32.0.1"
+    - name: PORT
+      value: "31986"
+    - name: DBNAME
+      value: "postgresdb"
+    - name: USER
+      value: "postgresadmin"
+    - name: PASSWORD
+      value: "admin123"
+    - name: ID
+      value: $(extensions.product_id)
+    - name: PURCHASED
+      value: $(extensions.purchased)
