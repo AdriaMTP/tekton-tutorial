@@ -12,7 +12,13 @@ spec:
   params:
     - name: podname
       value: "postgres-f97d5746b-dgxdx"
+    - name: hostaddr
+      value: "10.32.0.1"
+    - name: port
+      value: "31986"
     - name: dbname
       value: "postgresdb"
     - name: user
       value: "postgresadmin"
+    - name: password
+      value: "admin123"

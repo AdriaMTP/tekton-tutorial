@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: postgres-drop
+spec:
+  params:
+    - name: hostaddr
+      description: PostgreSQL hostname or IP.
+      default: "localhost"
+    - name: port
+      description: PostgreSQL access port.
+      default: "5432"
+    - name: dbname
+      description: PostgreSQL products DB name.
+    - name: user
+      description: PostgreSQL access user.
+    - name: password
+      description: PostgreSQL access password.
+  steps:
+    - name: drop-database
+      image: postgres:12-alpine
+      script: |
+        #!/bin/bash
+        psql "hostaddr=$(params.hostaddr) port=$(params.port) dbname=postgres user=$(params.user) password=$(params.password)" << EOF
+        DROP DATABASE IF EXISTS $(params.dbname);
+        CREATE DATABASE $(params.dbname);
+        EOF
+        echo "Dropped database '$(params.dbname)'..."
